@@ -1,0 +1,154 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>yurafuca チャット</title>
+	<style type="text/css">
+		body {
+      font-family: "MS Pゴシック", "MS PGothic";
+      background-color: #333;
+      color: #eee;
+		}
+    header {
+      margin-bottom: 50px;
+    }
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+    select {
+      padding: 2px;
+      font-family: "MS Pゴシック", "MS PGothic";
+    }
+    input[type="text"] {
+      margin: 5px;
+      border: solid 1px #eee;
+    }
+    button {
+      font-family: "MS Pゴシック", "MS PGothic";
+      background-color: #ccc;
+      border-width: 1px;
+      padding: 3px;
+    }
+    .chat_name {
+      color: white;
+      font-weight: bold;
+    }
+    .message {
+      padding: 10px 5px;
+      border-bottom: solid 1px #111;
+    }
+    .message:first-child {
+      margin-top: 20px;
+      border-top: solid 1px #111;
+    }
+    .name {
+      font-weight: bold;
+    }
+    .system {
+      font-weight: bold;
+      color: lightblue;
+    }
+    .time {
+      font-size: 0.8em;
+      color: #999;
+    }
+    .big {
+      font-size: xx-large;
+    }
+    .normal {
+      font-size: normal;
+    }
+    .small {
+      font-size: x-small;
+    }
+	</style>
+</head>
+<body>
+  <header>
+    <img src="20101122_01.png" style="max-height: 70px">
+  </header>
+  <div class="chat_name">yurafuca チャットルーム<div>
+  <input type="text" id="name_input" style="width:200px;" />
+  <button onclick="enter();">入室</button><br>
+  <input type="text" id="message_input" style="width:200px;" />
+  <select id="font_size">
+    <option value="small">小</option>
+    <option value="normal" selected>普通</option>
+    <option value="big">大</option>
+  </select>
+  <button onclick="publishMessage();">発言/更新</button>
+  <div id="message"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+  <script type="text/javascript">
+    Node.prototype.prependChild = function(e){ this.insertBefore(e,this.firstChild); }
+
+    var socketio = io.connect('http://localhost:8080');
+
+    socketio.on("connected", function(name) {});
+    socketio.on("publish", function (data) { addMessage(data.message, data.name, data.size); });
+    socketio.on("disconnect", function () {});
+
+    var myName = '';
+
+    function _enter(name) {
+      socketio.emit("connected", name);
+    }
+
+    function publishMessage() {
+      var textInput = document.getElementById('message_input');
+      var message = textInput.value;
+      var e = document.getElementById('font_size');
+      var size = e.options[e.selectedIndex].value;
+      socketio.emit("publish", { name: myName, message: message, size: size });
+      textInput.value = '';
+    }
+
+    function addMessage (message, name, size) {
+      var domMeg = document.createElement('div'); 
+      domMeg.className = 'message';
+
+      if (name) {
+        var domName = document.createElement('span');
+        domName.className = 'name';
+        domName.innerHTML = name;
+        domMeg.appendChild(domName);
+      }
+
+      if (name) {
+        var domSpatter = document.createElement('span');
+        domSpatter.className = 'spatter';
+        domSpatter.innerHTML = ' > ';
+        domMeg.appendChild(domSpatter);
+      }
+
+      var domContent = document.createElement('span');
+      domContent.className = 'content';
+      if (name == null) {
+        domContent.className += ' system';
+      }
+      domContent.innerHTML = message;
+      domMeg.appendChild(domContent);
+
+      if (size) {
+        domContent.className += (' ' + size);
+      }
+
+      var domTime = document.createElement('span'); 
+      domTime.className = 'time';
+      domTime.innerHTML = ' (' + (new Date()).toLocaleTimeString() + ')';
+      domMeg.appendChild(domTime);
+
+      var messageArea = document.getElementById("message");
+      messageArea.prependChild(domMeg);
+    }
+
+    // 3.開始処理
+    function enter() {
+      var nameArea = document.getElementById("name_input");
+      myName = nameArea.value;
+      addMessage("あなたは " + myName + " として入室しました");
+      _enter(myName);
+    }
+  </script>
+</body>
+</html>
