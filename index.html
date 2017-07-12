@@ -1,154 +1,454 @@
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <title>yurafuca チャット</title>
-	<style type="text/css">
-		body {
+  <title>レトロチャット</title>
+  <style type="text/css">
+    body {
+      margin: 10px 0 0 0;
       font-family: "MS Pゴシック", "MS PGothic";
-      background-color: #333;
-      color: #eee;
-		}
+      /*background-color: #115181;*/
+      background-color: black;
+      /*background: url('wallpaper.gif');*/
+      /*background: #01008C;*/
+      color: #FFE;
+    }
+
     header {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
     }
-    img {
-      display: block;
-      margin: 0 auto;
+
+    a {
+      color: #3CB371;
     }
+
     select {
+      /*background-color: #115181;*/
+      /*background-color: #282A36;*/
+      background-color: black;
       padding: 2px;
       font-family: "MS Pゴシック", "MS PGothic";
     }
-    input[type="text"] {
+
+    input {
+      font-family: "MS Pゴシック", "MS PGothic";
       margin: 5px;
       border: solid 1px #eee;
+      color: #FFE;
+      background-color: black;
     }
+
     button {
       font-family: "MS Pゴシック", "MS PGothic";
-      background-color: #ccc;
+      background-color: blue;
+      color: #FFE;
       border-width: 1px;
+      border-color: #FFE;
       padding: 3px;
     }
+
+    .center {
+      display: table;
+      margin: 0 auto;
+    }
+
+    #infos {
+      display: inline-block;
+      visibility: hidden;
+      /* default value */
+      margin: 0 0 0 5px;
+      font-size: 0.8em;
+      font-weight: normal;
+    }
+
+    #counters {
+      float: right;
+      font-weight: normal;
+      font-size: 0.8em;
+    }
+
+    #counters p {
+      margin-right: 5px;
+      display: inline;
+    }
+
+    #post_wrapper {
+      display: none;
+    }
+
+    #leave_button {
+      float: right;
+    }
+
+    #font_size {
+      color: #FFE;
+    }
+
+    #flash {
+      color: red;
+    }
+
     .chat_name {
-      color: white;
+      color: #FFE;
       font-weight: bold;
+      margin-bottom: 5px;
     }
+
     .message {
+      font-size: 0.9em;
       padding: 10px 5px;
-      border-bottom: solid 1px #111;
+      border-bottom: solid 1px #222;
+      /*border-bottom: solid 1px #666;*/
     }
+
     .message:first-child {
       margin-top: 20px;
-      border-top: solid 1px #111;
+      border-top: solid 1px #222;
+      /*border-top: solid 1px #666*/
     }
+
     .name {
       font-weight: bold;
     }
+
     .system {
-      font-weight: bold;
-      color: lightblue;
+      /*font-weight: bold;*/
+      /*color: lightblue;*/
+      /*color: dimgray !important;*/
     }
+
     .time {
       font-size: 0.8em;
       color: #999;
     }
+
     .big {
-      font-size: xx-large;
+      /*font-size: xx-large;*/
+      font-size: 2.0em;
     }
+
     .normal {
       font-size: normal;
     }
+
     .small {
       font-size: x-small;
     }
-	</style>
+
+    .italic {
+      font-style: italic;
+    }
+
+    .strike {
+      text-decoration: line-through;
+    }
+
+    .shout {
+      font-size: 3.0em;
+      font-style: italic;
+    }
+
+    .color1 {
+      color: #FFE;
+    }
+
+    .color2 {
+      color: red;
+    }
+
+    .color3 {
+      color: pink;
+    }
+
+    .color4 {
+      color: orange;
+    }
+
+    .color5 {
+      color: yellow;
+    }
+
+    .color6 {
+      color: #0F0;
+    }
+
+    .color7 {
+      color: cyan;
+    }
+
+    .color8 {
+      color: blue;
+    }
+    .color9 {
+      color: #C000FF
+    }
+  </style>
 </head>
+
 <body>
   <header>
-    <img src="20101122_01.png" style="max-height: 70px">
+    <img src="20101122_01.png" class="center" style="max-height: 70px"><br>
+    <p class="center">CGIBOY の亡骸に愛をこめて</p>
+    <p class="center"><a href="https://yurafuca.com">ホームへ戻る</a></p>
   </header>
-  <div class="chat_name">yurafuca チャットルーム<div>
-  <input type="text" id="name_input" style="width:200px;" />
-  <button onclick="enter();">入室</button><br>
-  <input type="text" id="message_input" style="width:200px;" />
-  <select id="font_size">
-    <option value="small">小</option>
-    <option value="normal" selected>普通</option>
-    <option value="big">大</option>
-  </select>
-  <button onclick="publishMessage();">発言/更新</button>
-  <div id="message"></div>
+  <div class="chat_name">
+    † レトロチャット †
+    <p id="infos">名前: <span id="infos_name"></span></p>
+    <div id="counters">
+      <p>ユーザー一覧: <span id="users">***</span>,</p>
+      <p>閲覧者数[<span id="viewer_count">-</span>]</p>
+    </div>
+  </div>
+  <div id="enter_wrapper">
+    名前:<input type="text" id="name_input" style="width:200px;" /> 色: <select id="font_color" class="color1" onChange="onChange()">
+      <option value="color1" class="color1">◆◆◆</option>
+      <option value="color2" class="color2">◆◆◆</option>
+      <option value="color3" class="color3">◆◆◆</option>
+      <option value="color4" class="color4">◆◆◆</option>
+      <option value="color5" class="color5">◆◆◆</option>
+      <option value="color6" class="color6">◆◆◆</option>
+      <option value="color7" class="color7">◆◆◆</option>
+      <option value="color8" class="color8">◆◆◆</option>
+      <option value="color9" class="color9">◆◆◆</option>
+      <option value="random" class="random">おまかせ</option>
+    </select> 挨拶:<input type="text" id="greeting_input" value="ガチャ" style="width:100px;" />
+    <button onclick="enter();" id="enter_button">入室</button>
+    <span id="flash"></span>
+  </div>
+  <div id="post_wrapper">
+    <input type="text" id="message_input" style="width:200px;" />
+    <select id="font_size">
+      <option value="small">小声</option>
+      <option value="normal" selected>普通</option>
+      <option value="big">大声</option>
+      <option value="italic">ナナメ</option>
+      <option value="strike">取消し</option>
+      <option value="shout">叫び</option>
+    </select>
+    <button onclick="publishMessage();">発言/更新</button>
+    <button id="leave_button" onclick="leave();">退室</button>
+  </div>
+  <div id="timeline">読み込み中．．．</div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
   <script type="text/javascript">
-    Node.prototype.prependChild = function(e){ this.insertBefore(e,this.firstChild); }
+    Node.prototype.prependChild = function (e) { this.insertBefore(e, this.firstChild); }
 
-    var socketio = io.connect('http://localhost:8080');
+    var loadingTimer = null;
 
-    socketio.on("connected", function(name) {});
-    socketio.on("publish", function (data) { addMessage(data.message, data.name, data.size); });
-    socketio.on("disconnect", function () {});
+    window.onload = function () {
+      loadingTimer = setInterval(function () {
+        var timeLine = document.getElementById("timeline");
+        timeLine.innerHTML += '．';
+      }, 500);
+      setInterval(function () {
+        socketio.emit('pauling');
+      }, 1000 * 2);
+    }
 
-    var myName = '';
+    var socketio = io.connect('http://ec2-54-201-20-190.us-west-2.compute.amazonaws.com:3000/');
+    // var socketio = io.connect('http://localhost:3000/');
+    socketio.emit('visit');
 
-    function _enter(name) {
-      socketio.emit("connected", name);
+    socketio.on("visit", function (data) { loadMessages(data) });
+    socketio.on("pauling", function (data) { pauling(data) });
+    socketio.on("connected", function (name, color) { });
+    socketio.on("publish", function (params) { addMessage(params); });
+    socketio.on("disconnect", function () { });
+
+    var myName = null;
+    var myColor = null;
+    var state = 'LEAVING'
+
+    function setState(theState) {
+      var enterWrapper = document.getElementById("enter_wrapper");
+      var postWrapper = document.getElementById("post_wrapper");
+      var infoArea = document.getElementById("infos");
+      if (theState === 'ENTERING') {
+        enterWrapper.style.display = 'none';
+        postWrapper.style.display = 'block';
+        infoArea.style.visibility = 'visible';
+      } else if (theState === 'LEAVING') {
+        enterWrapper.style.display = 'block';
+        postWrapper.style.display = 'none';
+        infoArea.style.visibility = 'hidden';
+      }
+    }
+
+    function _enter(name, color, message) {
+      setState('ENTERING');
+      socketio.emit("connected", name, color, message);
+    }
+
+    function onChange() {
+      var e = document.getElementById("font_color");
+      var color = e.options[e.selectedIndex].className;
+      if (color === 'random') {
+        e.style.color = "white";
+      } else {
+        e.className = color;
+      }
+    }
+
+    function leave() {
+      setState('LEAVING');
+      socketio.emit("leave");
+    }
+
+    function pauling(data) {
+      document.getElementById("viewer_count").innerHTML = data.viewerCount;
+      var usersArea = document.getElementById("users");
+      usersArea.innerHTML = '***';
+      Object.keys(data.users).forEach(function (socketId, index) {
+        var userName = data.users[socketId].name;
+        var userColor = data.users[socketId].color;
+
+        var colorCircleArea = document.createElement('span');
+        colorize(colorCircleArea, userColor);
+        colorCircleArea.innerHTML = '●';
+
+        var userNameArea = document.createElement('span');
+        userNameArea.innerHTML = userName;
+
+        var wrapper = document.createElement('span');
+        wrapper.appendChild(colorCircleArea);
+        wrapper.appendChild(userNameArea);
+
+        if (index === 0) {
+          usersArea.innerHTML = "";
+        }
+        usersArea.appendChild(wrapper);
+      });
+    }
+
+    function loadMessages(data) {
+      clearInterval(loadingTimer);
+      document.getElementById("timeline").innerHTML = "";
+      data.forEach(function (item, index) {
+        params = {
+          message: item.message.S,
+          name: item.name.S,
+          size: item.size ? item.size.S : null,
+          color: item.color ? item.color.S : null,
+          date: item.date.S,
+          isSystem: item.isSystem.BOOL
+        };
+        addMessage(params);
+      });
     }
 
     function publishMessage() {
-      var textInput = document.getElementById('message_input');
-      var message = textInput.value;
-      var e = document.getElementById('font_size');
-      var size = e.options[e.selectedIndex].value;
-      socketio.emit("publish", { name: myName, message: message, size: size });
-      textInput.value = '';
+      var messageInput = document.getElementById('message_input');
+      var message = messageInput.value;
+      var sizeInput = document.getElementById('font_size');
+      var size = sizeInput.options[sizeInput.selectedIndex].value;
+      socketio.emit("publish", {
+        name: myName,
+        message: message,
+        size: size,
+        color: myColor,
+        date: (new Date()).toString(),
+        isSystem: false
+      });
+      messageInput.value = '';
     }
 
-    function addMessage (message, name, size) {
-      var domMeg = document.createElement('div'); 
-      domMeg.className = 'message';
+    function addMessage(params) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'message';
 
-      if (name) {
-        var domName = document.createElement('span');
-        domName.className = 'name';
-        domName.innerHTML = name;
-        domMeg.appendChild(domName);
+      // if (!params.isSystem) {
+      var nameArea = document.createElement('span');
+      nameArea.className = 'name';
+      colorize(nameArea, params.color);
+      nameArea.innerHTML = params.name;
+      wrapper.appendChild(nameArea);
+      // }
+
+      // if (!params.isSystem) {
+      var splitArea = document.createElement('span');
+      splitArea.className = 'spatter';
+      splitArea.innerHTML = ' > ';
+      // colorize(splitArea, params.color);
+      wrapper.appendChild(splitArea);
+      // }
+
+      var messageArea = document.createElement('span');
+      messageArea.className = 'content';
+      if (params.isSystem) {
+        messageArea.className += ' system';
+      }
+      messageArea.innerHTML = params.message;
+      // colorize(messageArea, params.color);
+      wrapper.appendChild(messageArea);
+
+      if (params.size) {
+        messageArea.className += (' ' + params.size);
       }
 
-      if (name) {
-        var domSpatter = document.createElement('span');
-        domSpatter.className = 'spatter';
-        domSpatter.innerHTML = ' > ';
-        domMeg.appendChild(domSpatter);
-      }
+      var timeArea = document.createElement('span');
+      timeArea.className = 'time';
+      timeArea.innerHTML = ' (' + (new Date(Date.parse(params.date))).toLocaleTimeString() + ')';
+      // timeArea.innerHTML = '( ' + params.date + ' )';
+      wrapper.appendChild(timeArea);
 
-      var domContent = document.createElement('span');
-      domContent.className = 'content';
-      if (name == null) {
-        domContent.className += ' system';
-      }
-      domContent.innerHTML = message;
-      domMeg.appendChild(domContent);
-
-      if (size) {
-        domContent.className += (' ' + size);
-      }
-
-      var domTime = document.createElement('span'); 
-      domTime.className = 'time';
-      domTime.innerHTML = ' (' + (new Date()).toLocaleTimeString() + ')';
-      domMeg.appendChild(domTime);
-
-      var messageArea = document.getElementById("message");
-      messageArea.prependChild(domMeg);
+      var timeLine = document.getElementById("timeline");
+      timeLine.prependChild(wrapper);
     }
 
     // 3.開始処理
     function enter() {
-      var nameArea = document.getElementById("name_input");
-      myName = nameArea.value;
-      addMessage("あなたは " + myName + " として入室しました");
-      _enter(myName);
+      var name = document.getElementById("name_input").value;
+      if (name === '') {
+        document.getElementById("flash").innerHTML = "名前を入力してください";
+        return;
+      }
+      var greeting = document.getElementById("greeting_input").value;
+      if (greeting === '') {
+        document.getElementById("flash").innerHTML = "挨拶を入力してください";
+        return;
+      }
+      // Save input data
+      var e = document.getElementById('font_color');
+      myColor = e.options[e.selectedIndex].className;
+      myName = name;
+      if (myColor === 'random') {
+        myColor = getRandomColor();
+      }
+      // Seitch to post mode
+      document.getElementById("flash").innerHTML = "";
+      var area = document.getElementById("infos_name");
+      area.innerHTML = myName;
+      colorize(area, myColor);
+      // Enter
+      var enterMessage = document.getElementById("greeting_input").value;
+      var params = {
+        message: enterMessage + "(入室)",
+        color: myColor,
+        isSystem: true,
+      }
+      _enter(myName, myColor, enterMessage + "(入室)");
+    }
+
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function colorize(element, color) {
+      if (color == null) {
+        return;
+      }
+      if (color.startsWith('#')) {
+        element.style.color = color;
+      } else {
+        element.className += ' ' + color;
+      }
     }
   </script>
 </body>
+
 </html>

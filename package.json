@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/yurafuca/goodbye-cgiboy#readme",
   "dependencies": {
+    "aws-sdk": "^2.82.0",
+    "node-uuid": "^1.4.8",
     "socket.io": "^2.0.3"
   }
 }

@@ -2,5 +2,8 @@ webstore/
 node_modules/
 dist/
 .log
+credentials.json
 
 *.log
+
+*.pem
